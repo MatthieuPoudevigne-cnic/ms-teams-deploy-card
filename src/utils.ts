@@ -1,5 +1,6 @@
 import { Octokit } from "@octokit/rest";
-import { setOutput, info, getInput, warning } from "@actions/core";
+// import { setOutput, info, getInput, warning } from "@actions/core";
+import { info, getInput, warning } from "@actions/core";
 import fetch, { Response } from "node-fetch";
 import moment from "moment";
 import yaml from "yaml";
@@ -8,6 +9,15 @@ import { WebhookBody, PotentialAction } from "./models";
 import { formatCompactLayout } from "./layouts/compact";
 import { formatCozyLayout } from "./layouts/cozy";
 import { formatCompleteLayout } from "./layouts/complete";
+
+const os = require("os");
+const fs = require("fs");
+
+export function setOutput(key: string, value: string) {
+  // Temporary hack until core actions library catches up with github new recommendations
+  const output = process.env['GITHUB_OUTPUT']
+  fs.appendFileSync(output, `${key}=${value}${os.EOL}`)
+}
 
 export function escapeMarkdownTokens(text: string) {
   return text
